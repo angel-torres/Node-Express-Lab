@@ -32,7 +32,6 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    console.log(req.body.title)
     if (!req.body.title | !req.body.contents) {
         res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
     } else {
@@ -42,6 +41,24 @@ router.post('/', (req, res) => {
             res.status(200).json(post)
         })
         .catch( err => res.status(500).json({ error: "There was an error while saving the post to the database" }))
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try { 
+        const id = req.params.id
+        Posts
+        .remove(id)
+        .then( deleted => {
+            console.log(deleted)
+            if (deleted) {
+                res.status(200).json({message: "Post has been deleted"});
+            } else {
+                res.status(404).json({ message: "The post with the specified ID does not exist." })
+            }
+        })
+    } catch {
+        res.status(500).json({ error: "The post information could not be retrieved." });
     }
 })
 
